@@ -3,190 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Meal Prep Generator</title>
+  <title>Refeições casa Santos</title>
+  <!-- Importing Poppins font for a modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* 
-      1) GENERAL RESET & BODY STYLES
-    */
+    /* Reset and Base Styles */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(160deg, #ECF2FD 0%, #FFFFFF 100%);
-      color: #333;
+      font-family: 'Poppins', sans-serif;
+      background: #F5F7FA;
+      color: #414C6B;
     }
-
-    /* 
-      2) HEADER / HERO SECTION
-    */
+    /* Full-width header */
     header {
-      position: relative;
       width: 100%;
-      height: 250px;
-      background: #ECF2FD;
-      /* Rounded shape effect */
-      clip-path: ellipse(70% 100% at 50% 0%);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 30px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      background: #BBCFEC;
+      text-align: center;
+      padding: 20px 0;
     }
-
     header h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      color: #2E4A7B; /* A darker shade of blue for contrast */
+      color: #414C6B;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
     }
-
-    /* 
-      3) TOP NAV / REQUEST BUTTON
-      (If you want a "Request" button in the top-right corner, for example.)
-    */
-    .top-nav {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-
-    .request-button {
-      padding: 10px 20px;
-      background: #2E4A7B; 
-      color: #fff;
+    /* Full-width separator line */
+    .separator {
       border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s ease;
+      height: 1px;
+      background-color: #ffffff;
+      margin: 0;
     }
-
-    .request-button:hover {
-      background: #3E5E99;
-    }
-
-    /* 
-      4) MAIN CONTAINER
-    */
+    /* Main container for content below the separator */
     main {
       max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
+      margin: 20px auto;
+      padding: 0 20px;
     }
-
-    /* 
-      5) GENERATE BUTTON
-    */
+    /* Generate button styling */
     .generate-btn {
       display: block;
-      margin: 0 auto 30px auto;
+      margin: 20px auto 30px;
       padding: 12px 24px;
       font-size: 1rem;
       color: #fff;
-      background: #4A80D0;
+      background: #BBCFEC;
       border: none;
       border-radius: 25px;
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     .generate-btn:hover {
-      background: #5E90E0;
+      background: #414C6B;
     }
-
-    /* 
-      6) TABLE STYLES
-         - Use table-layout: fixed to avoid columns expanding with text.
-         - Use word-wrap / word-break to ensure long text fits.
-    */
+    /* Table Styles */
     table {
       width: 100%;
-      table-layout: fixed; /* Important: fixed layout */
+      table-layout: fixed;
       border-collapse: collapse;
       margin-bottom: 40px;
-      border-radius: 8px;
-      overflow: hidden; /* Rounds corners if you set a radius on table or container */
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-
     thead {
-      background: #2E4A7B;
+      background: #BBCFEC;
     }
-
     th, td {
       padding: 12px;
       text-align: center;
-      border: 1px solid #e0e0e0;
-      word-wrap: break-word;    /* or word-break: break-word; */
-      white-space: normal;      /* ensures wrapping if words are too long */
+      border: 1px solid #e2e8f0;
+      word-wrap: break-word;
     }
-
+    /* Ensure header text is white */
     th {
       color: #fff;
       font-weight: 600;
     }
-
-    /* Force two-column widths so day/meal columns don’t keep resizing */
-    th:nth-child(1),
-    td:nth-child(1) {
-      width: 25%; /* day column */
+    /* Force Day column to stay on one line */
+    th:first-child, td:first-child {
+      width: 25%;
+      white-space: nowrap;
     }
-    th:nth-child(2),
-    td:nth-child(2) {
-      width: 75%; /* meal column */
+    th:nth-child(2), td:nth-child(2) {
+      width: 75%;
     }
-
-    /* 
-      7) WEEK TITLE
-    */
+    /* Week Title styling */
     .week-title {
       margin: 40px 0 10px;
       text-align: center;
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      color: #2E4A7B;
+      color: #414C6B;
     }
-
-    /* 
-      8) MEDIA QUERIES (Optional)
-      If you want smaller text on mobile, etc.
-    */
+    /* Mobile Adjustments */
     @media (max-width: 600px) {
       header h1 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
       }
       .generate-btn {
         font-size: 0.9rem;
+        padding: 10px 20px;
       }
       .week-title {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 0.9rem;
+      }
+      th:first-child, td:first-child {
+        font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- Top Nav + Request Button (optional) -->
-  <div class="top-nav">
-    <button class="request-button">Request</button>
-  </div>
-
-  <!-- Header / Hero Section -->
   <header>
-    <h1>Gerador de refeições da casa Santos</h1>
+    <h1>Refeições casa Santos</h1>
   </header>
-
+  <!-- Separator line -->
+  <hr class="separator" />
   <main>
-    <!-- Generate Button -->
     <button class="generate-btn" onclick="generateMealPlan()">Gerar</button>
-    
-    <!-- Where the plan will be displayed -->
     <div id="mealPlan"></div>
   </main>
-
   <script>
     // Predefined meals lists
     const fishMeals = [
@@ -246,17 +190,17 @@
       return array;
     }
 
-    // Generate a two-week meal plan following the rules:
-    // - Domingo = Dia livre
-    // - Quinta = Sobras
+    // Generate a two-week meal plan following these rules:
+    // - Domingo = Free Day
+    // - Thursday = Sobras
     // - Sexta = Fish
-    // - Among Mon, Tue, Wed, Sat => pick 1 fish, rest meat
-    // - Avoid repetition across the 2 weeks
+    // - Among Mon, Tue, Wed, Sat => pick 1 fish and 3 meat
+    // - Avoid repetition across both weeks
     function generateMealPlan() {
       const mealPlanDiv = document.getElementById("mealPlan");
       mealPlanDiv.innerHTML = ""; // Clear previous plan
 
-      // Create shuffled copies to avoid repeating meals across weeks
+      // Create shuffled copies to avoid repeating meals
       let fishPool = shuffleArray([...fishMeals]);
       let meatPool = shuffleArray([...meatMeals]);
 
@@ -264,29 +208,26 @@
       const days = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
       for (let week = 1; week <= weeks; week++) {
-        // Initialize plan object
         let weekPlan = {};
 
-        // Fixed days
+        // Fixed days:
         weekPlan["Quinta"] = "Sobras";
-        weekPlan["Domingo"] = "Dia livre";
-
-        // Sexta always fish
+        weekPlan["Domingo"] = "Free Day";
         weekPlan["Sexta"] = fishPool.pop();
 
-        // Among Mon, Tue, Wed, Sat => pick 1 fish day, rest meat
+        // Among Segunda, Terça, Quarta, Sábado: pick 1 fish day and assign meat to the rest
         let remainingDays = ["Segunda", "Terça", "Quarta", "Sábado"];
         const randomIndex = Math.floor(Math.random() * remainingDays.length);
         const fishDay = remainingDays[randomIndex];
         weekPlan[fishDay] = fishPool.pop();
         remainingDays.splice(randomIndex, 1);
 
-        // Remaining days => meat
+        // Assign meat meals to the remaining days
         for (let day of remainingDays) {
           weekPlan[day] = meatPool.pop();
         }
 
-        // Build HTML
+        // Build the week's display
         const weekTitle = document.createElement("div");
         weekTitle.className = "week-title";
         weekTitle.textContent = "Semana " + week;
