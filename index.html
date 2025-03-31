@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meal Prep Generator</title>
+  <style>
+    /* 
+      1) GENERAL RESET & BODY STYLES
+    */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(160deg, #ECF2FD 0%, #FFFFFF 100%);
+      color: #333;
+    }
+
+    /* 
+      2) HEADER / HERO SECTION
+    */
+    header {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #ECF2FD;
+      /* Rounded shape effect */
+      clip-path: ellipse(70% 100% at 50% 0%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #2E4A7B; /* A darker shade of blue for contrast */
+    }
+
+    /* 
+      3) TOP NAV / REQUEST BUTTON
+      (If you want a "Request" button in the top-right corner, for example.)
+    */
+    .top-nav {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .request-button {
+      padding: 10px 20px;
+      background: #2E4A7B; 
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+
+    .request-button:hover {
+      background: #3E5E99;
+    }
+
+    /* 
+      4) MAIN CONTAINER
+    */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* 
+      5) GENERATE BUTTON
+    */
+    .generate-btn {
+      display: block;
+      margin: 0 auto 30px auto;
+      padding: 12px 24px;
+      font-size: 1rem;
+      color: #fff;
+      background: #4A80D0;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .generate-btn:hover {
+      background: #5E90E0;
+    }
+
+    /* 
+      6) TABLE STYLES
+         - Use table-layout: fixed to avoid columns expanding with text.
+         - Use word-wrap / word-break to ensure long text fits.
+    */
+    table {
+      width: 100%;
+      table-layout: fixed; /* Important: fixed layout */
+      border-collapse: collapse;
+      margin-bottom: 40px;
+      border-radius: 8px;
+      overflow: hidden; /* Rounds corners if you set a radius on table or container */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    thead {
+      background: #2E4A7B;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      word-wrap: break-word;    /* or word-break: break-word; */
+      white-space: normal;      /* ensures wrapping if words are too long */
+    }
+
+    th {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Force two-column widths so day/meal columns don’t keep resizing */
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 25%; /* day column */
+    }
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 75%; /* meal column */
+    }
+
+    /* 
+      7) WEEK TITLE
+    */
+    .week-title {
+      margin: 40px 0 10px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #2E4A7B;
+    }
+
+    /* 
+      8) MEDIA QUERIES (Optional)
+      If you want smaller text on mobile, etc.
+    */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .generate-btn {
+        font-size: 0.9rem;
+      }
+      .week-title {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Nav + Request Button (optional) -->
+  <div class="top-nav">
+    <button class="request-button">Request</button>
+  </div>
+
+  <!-- Header / Hero Section -->
+  <header>
+    <h1>Gerador de refeições da casa Santos</h1>
+  </header>
+
+  <main>
+    <!-- Generate Button -->
+    <button class="generate-btn" onclick="generateMealPlan()">Gerar</button>
+    
+    <!-- Where the plan will be displayed -->
+    <div id="mealPlan"></div>
+  </main>
+
+  <script>
+    // Predefined meals lists
+    const fishMeals = [
+      "Lasanha de atum",
+      "Douradinhos",
+      "Salmão",
+      "Medalhões de pescada com sopa de tomate",
+      "Quiche de atum",
+      "Empadão de Atum com arroz",
+      "Filetes",
+      "Massa com camarão",
+      "Massada de peixe",
+      "Bacalhau Espiritual",
+      "Lulas com molho mostarda e arroz",
+      "Cuscuz de salmão e pepino",
+      "Tarte de salmão e tomate seco",
+      "Empadão de peixe",
+      "Arroz de tamboril",
+      "Tagliatelli com salmão salteado e pesto"
+    ];
+
+    const meatMeals = [
+      "Pizza",
+      "Strogonoff",
+      "Almôndegas",
+      "Rolo de Carne",
+      "Hamburguer",
+      "Frango assado",
+      "Frango Fricassé",
+      "Lombinho de porco",
+      "Rolinhos de peru com queijo e fiambre",
+      "Massa com fiambre e espinafres (Bimby)",
+      "Salsichas frescas",
+      "Espetadas",
+      "Quiche",
+      "Nuggets",
+      "Pato desfiado",
+      "Nuggets/Cordon Bleu",
+      "Bolonhesa",
+      "Carbonara",
+      "Jardineira Batata Doce",
+      "Panados",
+      "Bifinhos de lombo de porco com pimentão",
+      "Guisado de perú coberto",
+      "Caril de frango (Bimby)",
+      "Empadão de carne (Bimby)",
+      "Orzo com frango e pesto (Bimby)",
+      "Canelones de salsicha e espinafres (Bimby)"
+    ];
+
+    // Shuffle an array using Fisher-Yates algorithm
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Generate a two-week meal plan following the rules:
+    // - Domingo = Dia livre
+    // - Quinta = Sobras
+    // - Sexta = Fish
+    // - Among Mon, Tue, Wed, Sat => pick 1 fish, rest meat
+    // - Avoid repetition across the 2 weeks
+    function generateMealPlan() {
+      const mealPlanDiv = document.getElementById("mealPlan");
+      mealPlanDiv.innerHTML = ""; // Clear previous plan
+
+      // Create shuffled copies to avoid repeating meals across weeks
+      let fishPool = shuffleArray([...fishMeals]);
+      let meatPool = shuffleArray([...meatMeals]);
+
+      const weeks = 2;
+      const days = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
+      for (let week = 1; week <= weeks; week++) {
+        // Initialize plan object
+        let weekPlan = {};
+
+        // Fixed days
+        weekPlan["Quinta"] = "Sobras";
+        weekPlan["Domingo"] = "Dia livre";
+
+        // Sexta always fish
+        weekPlan["Sexta"] = fishPool.pop();
+
+        // Among Mon, Tue, Wed, Sat => pick 1 fish day, rest meat
+        let remainingDays = ["Segunda", "Terça", "Quarta", "Sábado"];
+        const randomIndex = Math.floor(Math.random() * remainingDays.length);
+        const fishDay = remainingDays[randomIndex];
+        weekPlan[fishDay] = fishPool.pop();
+        remainingDays.splice(randomIndex, 1);
+
+        // Remaining days => meat
+        for (let day of remainingDays) {
+          weekPlan[day] = meatPool.pop();
+        }
+
+        // Build HTML
+        const weekTitle = document.createElement("div");
+        weekTitle.className = "week-title";
+        weekTitle.textContent = "Semana " + week;
+        mealPlanDiv.appendChild(weekTitle);
+
+        const table = document.createElement("table");
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        const dayHeader = document.createElement("th");
+        dayHeader.textContent = "Dia";
+        const mealHeader = document.createElement("th");
+        mealHeader.textContent = "Refeição";
+        headerRow.appendChild(dayHeader);
+        headerRow.appendChild(mealHeader);
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        for (let day of days) {
+          const row = document.createElement("tr");
+          const dayCell = document.createElement("td");
+          dayCell.textContent = day;
+          const mealCell = document.createElement("td");
+          mealCell.textContent = weekPlan[day];
+          row.appendChild(dayCell);
+          row.appendChild(mealCell);
+          tbody.appendChild(row);
+        }
+        table.appendChild(tbody);
+        mealPlanDiv.appendChild(table);
+      }
+    }
+  </script>
+</body>
+</html>
